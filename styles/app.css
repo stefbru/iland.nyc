@@ -22,6 +22,7 @@ header {
 	/*background-color: rgba(255, 255, 255, .5);*/
 	padding: .4em;
 	opacity: 1;
+	margin-top: 51px;
 }
 
 header p {
@@ -39,7 +40,7 @@ header .note {
 }
 
 b{
-	color:white;
+	color:#fff;
 	font-weight: bold;
 }
 
@@ -67,13 +68,23 @@ a#about {
 a#about:hover {
 	background-color: #333;
 	text-decoration: none;
+	cursor: pointer;
+}
+
+a {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 .scene {
 	position: absolute;
 	width: 1100px;
 	height: 619px;
-	top: 50%;
+	top: 530px;
 	left: 50%;
 	margin-left: -550px;
 	margin-top: -310px;
@@ -100,7 +111,7 @@ a#about:hover {
 }
 
 .video {
-	display: flex;
+	/*display: flex;*/
 	position: absolute;
 	top: 100%;
 	left: 0;
@@ -112,7 +123,10 @@ a#about:hover {
 	transition: all 1s;
 	opacity: 0;
 	z-index: -1;
-	background-color: white;
+	background-color: #fff;
+	overflow: scroll;
+	padding-bottom:200px;
+	padding-top: 15px;
 }
 
 .video video {
@@ -121,13 +135,28 @@ a#about:hover {
 	margin: 0 auto;
 	max-width: 100%;
 	max-height: 100%;
+
 }
 
 .show-video .video {
-	top: 0;
+	top: 200px;
 	opacity: 1;
 }
 
 .show-video .scene {
 	opacity: 0;
+}
+
+span.under{
+	color: #000;
+	font-family: times, serif;
+	font-size: 55px;
+	line-height: 80px;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 60px;
+
+	padding-bottom: 10px;
+	border-bottom: 18px solid #000;
+	margin-bottom: 20px;
 }
