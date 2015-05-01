@@ -132,7 +132,7 @@ a:hover {
 .video video {
 	flex: 1;
 	display: block;
-	margin: 0 auto;
+	margin: 0 auto 400px auto;
 	max-width: 100%;
 	max-height: 100%;
 
