@@ -4,6 +4,7 @@ var ax = 0;
 var player = document.getElementById('player');
 var hand = document.getElementById('hand');
 var scene = document.querySelector('.scene');
+var video = document.getElementById('video');
 
 if (typeof window.DeviceMotionEvent != 'undefined') {
 	window.ondevicemotion = function(e) {
@@ -28,5 +29,18 @@ if (typeof window.DeviceMotionEvent != 'undefined') {
 }
 
 document.getElementById('about').onclick = function() {
-	document.body.classList.add('show-video');
+	document.body.classList.add('show-content');
+	video.pause();
+	video.paused = true;
+	video.onclick = null;
+}
+
+video.onclick = function() {
+	if (!this.paused) {
+		this.pause();
+		this.paused = true;
+	} else {
+		this.play();
+		this.paused = false;
+	}
 }
