@@ -1,0 +1,245 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>be conscious of what you hold close</title>
+	<meta name="description" content="remix with strangers addiction">
+	<meta name="author" content="stefania brusatin, peter prikryl">
+	<meta name="keywords" content="music, addiction">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/vendor/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+	<video autoplay loop id="bgvid">
+		<source src="videos/backg.mp4" type="video/mp4" />
+	</video>
+	<div id="wrapper">
+		<div id="content">
+			<aside>
+				<div id="bottom_left">
+					YOUR HOLDING<br> IT CLOSE
+				</div>
+				<div id="top_left">
+					We all remix our ambient
+					<br> sounds together; 
+					<br> when we send texts,
+					<br> e-mails, post feeds, make calls. 
+					<br><br> Lets do it consciously, here.
+					<br><br> choose &amp; click from
+					<br> the 30 emojis (
+					<img src="images/earth-01.png" style="width:26px;vertical-align:bottom;margin-bottom:-4px;">)
+					<br> to mix the samples
+					<br> while hearing what other
+					<br> online visitors (
+					<img src="images/pointer.png" style="width:26px;vertical-align:bottom;margin-bottom:-4px;">) are
+					<br>playing.
+				</div>
+				<div id="num-players-holder">online:
+					<ul id="num-players">
+					</ul>
+				</div>
+			</aside>
+			<main id="soundholder"></main>
+			<footer id="made-by">
+				Made in the lowlands of Manhattan and the high valleys of Bratislava by <a href="">Stefania Brusatin</a> &amp; <a href="http://pc.poradna.net">Peter Prikryl.</a> Thank you for your idea,
+				<a href="http://dismagazine.com/disco/59592/sonic-chatroulette/" target="_blank">HH~Chorus.</a>
+			</footer>
+			<script>
+function html(text) {
+	if (!text)
+		return '';
+	return text
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;');
+}
+
+function throttle(fn, threshhold, scope) {
+	threshhold || (threshhold = 250);
+	var last, deferTimer;
+	return function () {
+		var context = scope || this;
+		var now = +new Date,
+		args = arguments;
+		if (last && now < last + threshhold) {
+			// hold on to it
+			clearTimeout(deferTimer);
+			deferTimer = setTimeout(function () {
+				last = now;
+				fn.apply(context, args);
+			}, threshhold);
+		} else {
+			last = now;
+			fn.apply(context, args);
+		}
+	};
+}
+
+function initButtons() {
+	var list = document.getElementById('soundholder');
+	var template = [
+		'<a class="soundbtn" id="soundbtn-{{counter}}">',
+		' <div class="soundbtn-inner">',
+		'  <img src="images/{{image}}">',
+		'  <audio>',
+		'   <source src="sounds/{{sound}}" type="audio/wav">',
+		'  </audio>',
+		'  <div>{{counter}}</div>',
+		' </div>',
+		'</a>'].join('');
+	var buttons = [
+		'email.mp3',
+		'bell.wav',
+		'sent.wav',
+		'profile.wav',
+		'tower.wav',
+		'earth.wav',
+		'text.wav',
+		'shit_faced.wav',
+		'thumb.wav',
+		'download.wav',
+		'linked.wav',
+		'time.wav',
+		'location.wav',
+		'wifi.wav',
+		'noti.wav',
+		'charge.wav',
+		'heart.wav',
+		'net.wav',
+		'selfi.wav',
+		'swip.wav',
+		'battery.wav',
+		'loop.wav',
+		'jam.mp3',
+		'joy.wav',
+		'twit.wav',
+		'cloud.wav',
+		'i.wav'];
+	var html = [];
+	for (var i = 0, n = buttons.length; i < n; ++i) {
+		var itemHtml = template
+			.replace(/\{\{image\}\}/g, buttons[i].replace(/\.[^.]*$/g, '.png'))
+			.replace(/\{\{sound\}\}/g, buttons[i])
+			.replace(/\{\{counter\}\}/g, i + 1);
+		html.push(itemHtml);
+	}
+	list.innerHTML = html.join('\n');
+	list.addEventListener('click', function(e) {
+		for (var tgt = e.target; tgt; tgt = tgt.parentNode) {
+			if (tgt.classList && tgt.classList.contains('soundbtn')) {
+				var audio = tgt.querySelector('audio');
+				audio.pause();
+				audio.currentTime = 0;
+				audio.play();
+				break;
+			}
+		}
+	}, false);
+}
+
+function initWebSocket() {
+	var ul = document.getElementById('num-players');
+	var soundHolder = document.getElementById('soundholder');
+	var clientId = 0;
+	var name = "";
+	var emoji = "";
+	var gif = "";
+	var players = {};
+	var ws = new WebSocket('ws://' + location.hostname + ':5000');
+	ws.onmessage = function(e) {
+		var message = JSON.parse(e.data);
+		switch (message.action) {
+			case 'hello':
+				name = prompt("What is your name?");
+				ws.send(JSON.stringify({
+					action: 'connect',
+					name: name
+						// id: rid,
+						// color: cl,
+						// x: 0,
+						// y: 0
+				}));
+				window.onmousemove = throttle(function(e) {
+					ws.send(JSON.stringify({
+						action: 'move',
+						x: e.pageX,
+						y: e.pageY
+					}));
+				}, 10);
+				var proxyClick;
+				soundHolder.addEventListener('click', proxyClick = function(e) {
+					for (var tgt = e.target; tgt; tgt = tgt.parentNode) {
+						if (tgt.classList && tgt.classList.contains('soundbtn')) {
+							ws.send(JSON.stringify({
+								action: 'play',
+								sound: tgt.id
+							}));
+							break;
+						}
+					}
+				}, false);
+				ws.onclose = function() {
+					window.onmousemove = null;
+					soundHolder.removeEventListener('click', proxyClick);
+				};
+				break;
+			case 'connect':
+				// someone connected, add him to the list
+				var player = players[message.name] = {
+					name: message.name,
+					emoji: message.emoji,
+					id: ++clientId
+				};
+				var li = document.createElement('li');
+				li.id = 'player-' + player.id;
+				li.innerHTML = [
+					'<img class="runner" src="images/runningman.gif" />',
+					'<span class="emoji">', html(player.emoji), '</span>',
+					'<b>', html(player.name), '</b>'
+				].join('');
+				ul.appendChild(li);
+				break;
+			case 'move':
+				var player = players[message.name];
+				var pointer = document.getElementById('pointer-' + player.id);
+				if (pointer == null) {
+					pointer = document.createElement('div');
+					pointer.id = 'pointer-' + player.id;
+					pointer.className = 'pointer';
+					document.body.appendChild(pointer);
+				}
+				pointer.style.left = message.x + 'px';
+				pointer.style.top = message.y + 'px';
+				break;
+			case 'play':
+				var btn = document.getElementById(message.sound);
+				if (btn.classList && btn.classList.contains('soundbtn')) {
+					var audio = btn.querySelector('audio');
+					audio.pause();
+					audio.currentTime = 0;
+					audio.play();
+				}
+				break;
+			case 'disconnect':
+				// someone disconnected, remove him from the list
+				var player = players[message.name];
+				delete players[message.name];
+				var el = document.getElementById('player-' + player.id);
+				el.parentNode.removeChild(el);
+				break;
+		}
+	};
+}
+
+initButtons();
+initWebSocket();
+			</script>
+			<div id="clients"></div>
+		</div>
+	</div>
+</body>
+
+</html>
