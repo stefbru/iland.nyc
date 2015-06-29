@@ -108,7 +108,7 @@ a:hover {
 }
 
 .scene {
-	width: 100%;
+	width: 80%;
 	height: 640px;
 	margin-right: -100%;
 	background: #fff url(../images/scene.jpg) no-repeat 50% 50%;
