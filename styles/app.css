@@ -210,7 +210,7 @@ span.under{
 }
 
 #map{
-	width:98%;
+	width:84%;
 }
 
 .row::after {
@@ -289,7 +289,7 @@ span.under{
 	.dot_later{
 		transition: all 0.9s;
 		border-bottom-style: dotted;
-		width: 90%;
+		width: 81%;
 		margin-left: 40px;
 	}
 
@@ -306,9 +306,9 @@ span.under{
 
 	.right .dots{
 		transition: all 0.9s;
-		margin-top: 15px;
+		margin-top: -11px;
 		margin-left: 70px;
-		width: 170%;
+		width: 140%;
 	}
 }
 
