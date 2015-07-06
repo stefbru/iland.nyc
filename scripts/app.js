@@ -5,6 +5,19 @@ var player = document.getElementById('player');
 var hand = document.getElementById('hand');
 var scene = document.querySelector('.scene');
 var video = document.getElementById('video');
+var msg = document.getElementById('message').style.visibility = "hidden";
+
+
+function popup(){
+	var onAndOff = function() {
+		document.getElementById('message').style.visibility = "visible";
+		setTimeout(function(){
+			document.getElementById('message').style.visibility = "hidden";
+		}, 5000);
+	};
+	setTimeout(onAndOff, 4000);
+}
+popup();
 
 if (typeof window.DeviceMotionEvent != 'undefined') {
 	window.ondevicemotion = function(e) {
@@ -44,3 +57,7 @@ video.onclick = function() {
 		this.paused = false;
 	}
 }
+
+
+
+
